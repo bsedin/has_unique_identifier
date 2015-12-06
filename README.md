@@ -1,8 +1,11 @@
 # HasUniqueIdentifier
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/has_unique_identifier`. To experiment with that code, run `bin/console` for an interactive prompt.
+[![Gem Version](https://badge.fury.io/rb/has_unique_identifier.svg)](http://badge.fury.io/rb/has_unique_identifier)
+[![Code Climate](https://codeclimate.com/github/kressh/has_unique_identifier/badges/gpa.svg)](https://codeclimate.com/github/kressh/has_unique_identifier)
 
-TODO: Delete this and the text above, and describe your gem
+This gem provides unique identifier generation
+
+Supporting ORM are ActiveRecord and Sequel (through [sequel-rails](https://github.com/TalentBox/sequel-rails) gem)
 
 ## Installation
 
@@ -22,7 +25,21 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### ActiveRecord
+
+```ruby
+class User < ActiveRecord::Base
+  has_unique_identifier :sid, to_param: true
+end
+```
+
+### Sequel
+
+```ruby
+class Event < Sequel::Model
+  has_unique_identifier :id, only_numbers: true, to_param: true
+end
+```
 
 ## Development
 
@@ -32,7 +49,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/has_unique_identifier.
+Bug reports and pull requests are welcome on GitHub at https://github.com/kressh/has_unique_identifier.
 
 
 ## License
