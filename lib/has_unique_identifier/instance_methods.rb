@@ -1,6 +1,12 @@
 module HasUniqueIdentifier
   module InstanceMethods
     DEFAULT_RANDOM_IDENTIFIER_LENGTH = 24
+    DEFAULT_SAFE_CHARS = (
+      ('A'..'Z').to_a +
+      ('a'..'z').to_a +
+      ('0'..'9').to_a +
+      %w(- _ ~)
+    ).freeze
 
     extend ActiveSupport::Concern
 
@@ -25,16 +31,29 @@ module HasUniqueIdentifier
         length = self.class.unique_identifier.options[:length] ||
           DEFAULT_RANDOM_IDENTIFIER_LENGTH
 
+        unless self.class.unique_identifier.options[:force]
+          return if self[self.class.unique_identifier.name].present?
+        end
         send("#{self.class.unique_identifier.name}=",
           loop do
-            hash =
-              if self.class.unique_identifier.options[:only_numbers]
-                number_size = 10 ** length
-                SecureRandom.random_number(9 * number_size) + number_size
+            chars =
+              if self.class.unique_identifier.options[:safe_chars]
+                self.class.unique_identifier.options[:safe_chars]
+              elsif self.class.unique_identifier.options[:only_numbers]
+                (0..9).to_a
+              elsif self.class.unique_identifier.options[:only_letters]
+                ('a'..'z').to_a + ('A'..'Z').to_a
+              elsif self.class.unique_identifier.options[:no_symbols]
+                ('a'..'z').to_a + ('A'..'Z').to_a + (0..9).to_a
               else
-                SecureRandom.hex(length)
+                DEFAULT_SAFE_CHARS.dup
               end
-            break hash unless self.class.exists?(self.class.unique_identifier.name => hash)
+            chars.shuffle!
+
+            hash = Array.new(length) { chars.sample }.join
+            unless self.class.exists?(self.class.unique_identifier.name => hash.to_s)
+              break hash
+            end
           end
         )
       end
