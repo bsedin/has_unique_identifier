@@ -38,7 +38,7 @@ module HasUniqueIdentifier
           loop do
             chars =
               if self.class.unique_identifier.options[:safe_chars]
-                self.class.unique_identifier.options[:safe_chars]
+                self.class.unique_identifier.options[:safe_chars].dup
               elsif self.class.unique_identifier.options[:only_numbers]
                 (0..9).to_a
               elsif self.class.unique_identifier.options[:only_letters]
