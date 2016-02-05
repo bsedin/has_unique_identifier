@@ -20,7 +20,7 @@ module HasUniqueIdentifier
     end
 
     included do
-      before_create :ensure_unique_identifier
+      before_validation :ensure_unique_identifier
 
       private
 
