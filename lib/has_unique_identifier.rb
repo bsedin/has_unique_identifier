@@ -1,3 +1,6 @@
+require 'active_support'
+require 'active_model'
+
 require 'has_unique_identifier/version'
 require 'has_unique_identifier/class_methods'
 require 'has_unique_identifier/instance_methods'

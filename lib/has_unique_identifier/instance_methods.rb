@@ -5,10 +5,10 @@ module HasUniqueIdentifier
       ('A'..'Z').to_a +
       ('a'..'z').to_a +
       ('0'..'9').to_a +
-      %w(- _ ~)
+      %w[- _ ~]
     ).freeze
 
-    extend ActiveSupport::Concern
+    extend ::ActiveSupport::Concern
 
     def to_param
       if self.class.unique_identifier &&
